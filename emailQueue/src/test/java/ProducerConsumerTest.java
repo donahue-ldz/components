@@ -1,5 +1,6 @@
-import com.donahue.entity.Email;
-import com.donahue.service.ProducerService;
+
+import com.email.Email;
+import com.jmsAndActive.EmailProducerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import javax.jms.Destination;
 public class ProducerConsumerTest {
 
     @Autowired
-    ProducerService producerService;
+    EmailProducerService emailProducerService;
 
     @Autowired
     @Qualifier("queueDestination")
@@ -26,25 +27,29 @@ public class ProducerConsumerTest {
 
     @Test
     public void testSend(){
-        Email email = new Email();
+        /*Email email = new Email();
         email.setReciever("donahue");
         email.setSubject("just MessageConverter");
+        Another another = new Another();
+        another.setName("another name ");
+        another.setContext("another context");
 
-        for (int i=0; i<20; i++) {
+        for (int i=0; i<3; i++) {
             email.setContent("today is fine," +i);
-            producerService.sendMsg(destination, email);
-           /* try {
+            emailProducerService.sendMsg(destination, email);
+           *//* try {
                 //Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }*/
+            }*//*
         }
+        emailProducerService.sendMsg(destination,another);
 
         try {
-            Thread.sleep(1000000);  //避免容器关闭造成3干扰
+            Thread.sleep(10000);  //避免容器关闭造成3干扰
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 
