@@ -3,6 +3,8 @@ import com.email.Email;
 import com.email.EmailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -23,7 +25,15 @@ public class EmailListener {
      */
     public String onReceiveMessage(Email email){
         /**业务逻辑**/
-
+        Map<String,Object> context= new HashMap<String,Object>();
+        context.put("message","donahue");
+        String receivers = email.getTo();
+        emailSender.sendTemplateMail(receivers, "Test", "emailtemplates/activeEmail.vm", context, true);
+        try {
+            Thread.sleep(40000);  //防止spring容器关闭
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return "Receive success";
     }
 }
