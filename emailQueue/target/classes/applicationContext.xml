@@ -18,7 +18,7 @@
         <property name="messageConverter"  ref="messageConverter"/>
     </bean>
 
-    <bean id="messageConverter" class="com.donahue.entity.EmailMessageConverter"/>
+    <bean id="messageConverter" class="com.donahue.entity.DefaultMessageConverter"/>
 
     <!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供-->
     <bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
