@@ -29,7 +29,8 @@ import java.util.Map;
  */
 @Component("emailSender")
 public class VelocityEmailSenderImpl implements EmailSender{
-    private final String DEFAULT_SENDER = "shang_ming_yang@163.com";
+    /**DEFAULT_SENDER 是在发送没有指定From的邮件的时候的设置，此处要求和email.xml配置邮件服务器的账户一样**/
+    private final String DEFAULT_SENDER = "ldz2012yn@163.com";
     private final String DEFAULT_ENCODING = "UTF-8";
     private String emailFrom = DEFAULT_SENDER;
     private String emailEncoding = DEFAULT_ENCODING;
@@ -104,11 +105,11 @@ public class VelocityEmailSenderImpl implements EmailSender{
      * 群发不带附件
      * @param receivers
      * @param subject
-     * @param templateKey 指定模板名
+     * @param templateLocation 指定模板名所在的路径  格式 emailtemplates/*
      * @param context 邮件模板中的变量参数指定
      */
-    public void sendTemplateMail(final String receivers,final  String subject, final String templateKey, final Map<String, Object> context,final boolean isAsyn) {
-        sendEmail(receivers, subject, templateKey, context, null,isAsyn);
+    public void sendTemplateMail(final String receivers,final  String subject, final String templateLocation, final Map<String, Object> context,final boolean isAsyn) {
+        sendEmail(receivers, subject, templateLocation, context, null,isAsyn);
 
     }
 
@@ -173,20 +174,26 @@ public class VelocityEmailSenderImpl implements EmailSender{
 
 
     /**
-     * 发送常见的邮件
+     * 发送常见的邮件,依据已经注册的模板ID
      * @param email
      * @param TemplateId
      */
     @Override
     public void sendMailByTemplateId(Email email, String TemplateId,boolean isAsyn) {
+        if(!email.checkEmail())
+            return;
         EmailTemplate emailTemplate = emailTemplateFactory.create(TemplateId);
         Assert.notNull(emailTemplate);
         try {
+
             final MimeMessage mimeMessage = mailSender.createMimeMessage();
             mimeMessage.addFrom(InternetAddress.parse(emailTemplate.getFrom()));
-            mimeMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(email.getTo()));
+            if(email.getTo()!=null)
+                mimeMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(email.getTo()));
+            if(email.getCc()!=null)
             mimeMessage.addRecipients(Message.RecipientType.CC, InternetAddress.parse(email.getCc()));
-            mimeMessage.addRecipients(Message.RecipientType.BCC,InternetAddress.parse(email.getBcc()));
+            if(email.getBcc()!=null)
+                mimeMessage.addRecipients(Message.RecipientType.BCC,InternetAddress.parse(email.getBcc()));
             mimeMessage.setSubject(emailTemplate.getSubject());
             MimeMultipart multipart = new MimeMultipart("alternative");
             mimeMessage.setContent(multipart);
@@ -230,13 +237,14 @@ public class VelocityEmailSenderImpl implements EmailSender{
 
     }
 
-    private final void sendEmail(final String receivers,final String subject, final String templateKey,
+
+    private final void sendEmail(final String receivers,final String subject, final String templateLocation,
                            final Map<String,Object> context,final String [] attachments ,final boolean isAsyn) {
         Validate.notEmpty(receivers);
-        Validate.notEmpty(templateKey);
+        Validate.notEmpty(templateLocation);
 
         StringWriter writer = new StringWriter();
-        VelocityEngineUtils.mergeTemplate(velocityEngine, templateKey, getEmailEncoding(), context, writer);
+        VelocityEngineUtils.mergeTemplate(velocityEngine, templateLocation, getEmailEncoding(), context, writer);
 
         final String mailText = writer.toString();  //mail content
         final MimeMessage mimeMessage = mailSender.createMimeMessage();

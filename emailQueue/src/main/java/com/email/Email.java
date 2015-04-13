@@ -1,11 +1,12 @@
 package com.email;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**邮件实体类
  * Created by ldz on 21/11/14.
  */
-public class Email {
+public class Email implements Serializable{
     private String to;  //主送地址；
     private String cc;  //抄送地址；
     private String bcc;  //暗送地址;
@@ -61,6 +62,19 @@ public class Email {
         this.content = content;
     }
 
+
+
+    /**
+     * 检查邮件是否合法
+     * @return
+     */
+    public boolean checkEmail(){
+        if(cc!=null||to!=null||bcc!=null)
+            return true;
+        else
+            return false;
+
+    }
     @Override
     public String toString() {
         return "Email{" +

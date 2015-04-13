@@ -2,7 +2,9 @@ package com.jmsAndActive;
 import com.email.Email;
 import com.email.EmailSender;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.JmsException;
 
+import javax.jms.JMSException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +19,7 @@ import java.util.Map;
 public class EmailListener {
     @Autowired
     private EmailSender emailSender;
+    private int num = 0;
     /**
      * 写收到消息的逻辑
      * @param email 邮件对象，经过MessageConverter转换了
@@ -24,16 +27,29 @@ public class EmailListener {
      * 处理发生异常的时候会回滚，重复3次 具体见重投递策略
      */
     public String onReceiveMessage(Email email){
-        /**业务逻辑**/
-        Map<String,Object> context= new HashMap<String,Object>();
-        context.put("message","donahue");
-        String receivers = email.getTo();
-        emailSender.sendTemplateMail(receivers, "Test", "emailtemplates/activeEmail.vm", context, true);
-        try {
-            Thread.sleep(40000);  //防止spring容器关闭
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            /**业务逻辑**/
+            try {
+                Map<String,Object> context= new HashMap<String,Object>();
+                context.put("userName","donahue");
+                context.put("activeUrl","www.google.com");
+                context.put("message","today is fine!");
+                email.setContext(context);
+                emailSender.sendTemplateMail(email.getTo(), "Test", "emailtemplates/activeEmail.vm", context, true);
+                emailSender.sendMailByTemplateId(email,"REMIND", true);
+
+               /*if(num ==0) {
+                    num++;
+
+                    throw new RuntimeException();
+
+                }*/
+              }catch (JmsException e){
+                System.err.println("模拟异常状态");
+            }
+
+
+
+
         return "Receive success";
     }
 }

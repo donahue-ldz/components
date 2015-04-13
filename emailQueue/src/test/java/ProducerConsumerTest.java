@@ -27,29 +27,26 @@ public class ProducerConsumerTest {
 
     @Test
     public void testSend(){
-        /*Email email = new Email();
-        email.setReciever("donahue");
-        email.setSubject("just MessageConverter");
-        Another another = new Another();
-        another.setName("another name ");
-        another.setContext("another context");
+        Email email = new Email();
+        String reciever = "ldz2012yn@gmail.com";
+        email.setTo(reciever);
 
-        for (int i=0; i<3; i++) {
-            email.setContent("today is fine," +i);
-            emailProducerService.sendMsg(destination, email);
-           *//* try {
+        for (int i=0; i<1; i++) {
+            System.out.println("邮件尝试发送次数"+(i+1));
+            emailProducerService.sendMsg(destination, email,true);
+          /*  try {
                 //Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }*//*
+            }*/
         }
-        emailProducerService.sendMsg(destination,another);
+
 
         try {
-            Thread.sleep(10000);  //避免容器关闭造成3干扰
-        } catch (InterruptedException e) {
+            Thread.sleep(40000);  //防止spring容器关闭
+        } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
 

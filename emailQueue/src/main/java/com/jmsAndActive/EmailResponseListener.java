@@ -8,7 +8,7 @@ public class EmailResponseListener {
      * 写收到消息给发送者的反馈的逻辑
      */
     public void onReceiveMessage(String response){
-        System.out.println("Receive response from EmailListener"+response);
+        System.out.println("Receive response from EmailListener:  "+response);
 
     }
 }

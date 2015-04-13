@@ -14,11 +14,11 @@ public interface EmailSender {
      * 模板群发不带附件
      * @param receivers 接受者，可以多个,逗号分割
      * @param subject  主题
-     * @param templateKey 指定模板名
+     * @param templateLocation 指定模板名
      * @param context 邮件模板中的变量参数指定
      * @param asyn 是否异步发送
      */
-    public  void sendTemplateMail(String receivers, String subject, String templateKey, Map<String, Object> context, boolean asyn);
+    public  void sendTemplateMail(String receivers, String subject, String templateLocation, Map<String, Object> context, boolean asyn);
 
     /**
      * 模板群发带附件
