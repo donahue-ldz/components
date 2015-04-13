@@ -1,0 +1,6 @@
+多线程异步邮件消息队列系统使用如下
+1. 配置相关的消息队列的Destination name
+2. 一般不需要重写消息转换MessageConverter
+3. 调用EmailProducerService 的sendMsg()实现异步多线程发送到Broker
+4. 重写或者在EmailMessageListener由于采取的是MessageListenerAdapter 实现异步接收，所以在OnReceive里面实现业务逻辑
+
